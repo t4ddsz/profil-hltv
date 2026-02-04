@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Profil joueur (parodie) — page de stats CS2" />
+  <title>Profil joueur — NIDO (parodie)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1b33;
+      --panel2:#0c172d;
+      --text:#eaf1ff;
+      --muted:#a9b7d6;
+      --line:rgba(255,255,255,.12);
+      --accent:#4fb3ff;
+      --good:#4ee59a;
+      --warn:#ffd66e;
+      --bad:#ff6b7a;
+      --radius:18px;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:var(--font);
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(79,179,255,.25), transparent 55%),
+                  radial-gradient(900px 500px at 90% 10%, rgba(78,229,154,.14), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a{ color:inherit; }
+    .skip{
+      position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+    }
+    .skip:focus{
+      left:12px; top:12px; width:auto; height:auto; padding:.6rem .8rem;
+      background:var(--accent); color:#00152a; border-radius:12px; z-index:9999;
+    }
+    header{
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.15);
+      backdrop-filter: blur(10px);
+    }
+    .wrap{ max-width:1100px; margin:0 auto; padding:18px 16px; }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; text-decoration:none;
+    }
+    .logo{
+      width:36px; height:36px; border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), rgba(255,255,255,.15));
+      box-shadow: 0 12px 30px rgba(79,179,255,.18);
+    }
+    .brand span{ font-weight:800; letter-spacing:.3px; }
+    nav ul{
+      list-style:none; padding:0; margin:0; display:flex; gap:14px; flex-wrap:wrap;
+    }
+    nav a{
+      text-decoration:none;
+      padding:8px 10px;
+      border-radius:12px;
+      color:var(--muted);
+    }
+    nav a[aria-current="page"]{
+      color:var(--text);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .notice{
+      margin:14px 0 0;
+      padding:10px 12px;
+      background: rgba(255,214,110,.12);
+      border:1px solid rgba(255,214,110,.20);
+      border-radius: 14px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    main{ padding: 22px 0 40px; }
+    .grid{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+    @media (max-width: 920px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .inner{ padding:16px; }
+    .profileHead{
+      display:flex; gap:14px; align-items:center;
+    }
+    .avatar{
+      width:78px; height:78px; border-radius:22px; flex:0 0 auto;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .name{ margin:0; font-size:1.35rem; }
+    .sub{ margin:.2rem 0 0; color:var(--muted); font-size:.95rem; }
+    .tag{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      color: var(--muted);
+      font-size:.9rem;
+      margin-top:10px;
+    }
+    .dot{ width:8px; height:8px; border-radius:50%; background: var(--good); }
+    .kv{
+      display:grid; grid-template-columns: 1fr 1fr;
+      gap:10px; margin-top:14px;
+    }
+    .kv div{
+      padding:10px 10px;
+      border-radius:14px;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .kv strong{ display:block; font-size:.9rem; color:var(--muted); font-weight:600; }
+    .kv span{ font-size:1.05rem; font-weight:800; }
+
+    .sectionTitle{
+      margin:0 0 10px;
+      font-size:1.05rem;
+      color:var(--text);
+      letter-spacing:.2px;
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size: .98rem;
+    }
+    th, td{
+      padding:12px 10px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:middle;
+    }
+    th{ color:var(--muted); font-weight:700; }
+    .pill{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color:var(--muted);
+      font-size:.85rem;
+    }
+    .num{ font-variant-numeric: tabular-nums; }
+    .pos{ color: var(--good); font-weight:800; }
+    .mid{ color: var(--warn); font-weight:800; }
+    .neg{ color: var(--bad); font-weight:800; }
+
+    .footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:.92rem;
+      border-top:1px solid var(--line);
+      padding-top:14px;
+    }
+    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      text-decoration:none;
+      color: var(--text);
+    }
+    .btn:focus{ outline: 2px solid var(--accent); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <a class="brand" href="#" aria-label="Retour à l'accueil">
+          <div class="logo" aria-hidden="true"></div>
+          <span>StatsArena</span>
+        </a>
+        <nav aria-label="Navigation principale">
+          <ul>
+            <li><a href="#" aria-current="page">Joueur</a></li>
+            <li><a href="#">Équipes</a></li>
+            <li><a href="#">Classements</a></li>
+            <li><a href="#">Matches</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <p class="notice" role="note">
+        ⚠️ Page <strong>parodique</strong> créée pour une blague entre amis. Ceci n’est pas le site officiel d’aucune plateforme.
+      </p>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <div class="wrap">
+      <div class="grid">
+        <!-- Colonne gauche -->
+        <section class="card" aria-labelledby="profil">
+          <div class="inner">
+            <h1 id="profil" class="name">NIDO</h1>
+
+            <div class="profileHead" aria-label="En-tête de profil">
+              <div class="avatar">
+                <!-- Remplace l'image par celle de ton ami -->
+                <img src="https://picsum.photos/200" alt="Photo de profil de NIDO" />
+              </div>
+              <div>
+                <p class="sub">Nom : Théo “NIDO” Martin · France</p>
+                <div class="tag"><span class="dot" aria-hidden="true"></span><span>En ligne</span></div>
+              </div>
+            </div>
+
+            <div class="kv" role="list" aria-label="Infos rapides">
+              <div role="listitem"><strong>Âge</strong><span class="num">21</span></div>
+              <div role="listitem"><strong>Rôle</strong><span>Entry</span></div>
+              <div role="listitem"><strong>Équipe</strong><span>Les Baguettes</span></div>
+              <div role="listitem"><strong>Depuis</strong><span class="num">2024</span></div>
+            </div>
+
+            <div class="btnrow" aria-label="Actions">
+              <a class="btn" href="#" onclick="share()" role="button">Partager</a>
+              <a class="btn" href="#stats" role="button">Voir les stats</a>
+            </div>
+
+            <p class="footer">
+              Astuce blague : mets un “fait marquant” ridicule (ex: “inventeur du 360° no-scope au trackpad”).
+            </p>
+          </div>
+        </section>
+
+        <!-- Colonne droite -->
+        <section class="card" aria-labelledby="stats">
+          <div class="inner">
+            <h2 id="stats" class="sectionTitle">Statistiques (30 derniers jours)</h2>
+
+            <table aria-describedby="legend">
+              <thead>
+                <tr>
+                  <th scope="col">Catégorie</th>
+                  <th scope="col">Valeur</th>
+                  <th scope="col">Tendance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>K/D</td>
+                  <td class="num">1.18</td>
+                  <td><span class="pos">▲ +0.06</span></td>
+                </tr>
+                <tr>
+                  <td>ADR</td>
+                  <td class="num">78.4</td>
+                  <td><span class="mid">■ stable</span></td>
+                </tr>
+                <tr>
+                  <td>Rating</td>
+                  <td class="num">1.12</td>
+                  <td><span class="pos">▲ +0.03</span></td>
+                </tr>
+                <tr>
+                  <td>Headshot %</td>
+                  <td class="num">47%</td>
+                  <td><span class="neg">▼ -2%</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p id="legend" class="sub" style="margin-top:10px">
+              <span class="pill">▲ amélioration</span>
+              <span class="pill">■ stable</span>
+              <span class="pill">▼ baisse</span>
+            </p>
+
+            <h3 class="sectionTitle" style="margin-top:16px">Maps préférées</h3>
+            <table aria-label="Performance par map">
+              <thead>
+                <tr>
+                  <th scope="col">Map</th>
+                  <th scope="col">Matches</th>
+                  <th scope="col">Winrate</th>
+                  <th scope="col">Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Mirage</td>
+                  <td class="num">26</td>
+                  <td class="num">58%</td>
+                  <td class="num">1.15</td>
+                </tr>
+                <tr>
+                  <td>Inferno</td>
+                  <td class="num">19</td>
+                  <td class="num">53%</td>
+                  <td class="num">1.09</td>
+                </tr>
+                <tr>
+                  <td>Nuke</td>
+                  <td class="num">14</td>
+                  <td class="num">50%</td>
+                  <td class="num">1.05</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="footer">
+              Pour que ça fasse “vrai”, mets des détails cohérents : pseudo, rôle, pays, 2–3 équipes passées,
+              et des stats plausibles (pas 2.50 de rating 😄).
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function share(){
+      const url = window.location.href;
+      if(navigator.share){
+        navigator.share({ title: document.title, url }).catch(()=>{});
+      } else {
+        navigator.clipboard?.writeText(url);
+        alert("Lien copié (ou presque) !");
+      }
+    }
+  </script>
+</body>
+</html>
